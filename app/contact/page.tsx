@@ -232,7 +232,7 @@ export default function ContactPage() {
 
                   <Button
                     type="submit"
-                    className="bg-amber-600 hover:bg-amber-700"
+                    className="bg-amber-600 hover:bg-amber-700 w-full"
                   >
                     <Send className="mr-2 h-4 w-4" />
                     {loading ? "Sending..." : "Send Message"}
