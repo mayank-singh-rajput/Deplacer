@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
-const feedbackFilePath = path.join(process.cwd(), "data", "feedback.json");
+const feedbackFilePath = path.join(process.cwd(), "data", "tmp", "feedback.json");
 
 // GET method - Fetch feedbacks
 export async function GET(req: NextRequest) {
