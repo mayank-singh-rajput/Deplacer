@@ -1,28 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { MongoClient } from "mongodb";
 
-const feedbackFilePath = path.join(process.cwd(), "data", "tmp", "feedback.json");
+const uri = process.env.CONNECTION_URL!;
+const client = new MongoClient(uri);
+const dbName = "deplacer"; 
+const collectionName = "feedbacks";
 
-// GET method - Fetch feedbacks
 export async function GET(req: NextRequest) {
-  const fileData = fs.readFileSync(feedbackFilePath, "utf-8");
-  const feedbacks = JSON.parse(fileData);
-  return NextResponse.json(feedbacks);
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const collection = db.collection(collectionName);
+    const feedbacks = await collection.aggregate([{ $sample: { size: 3 } }]).toArray();
+
+    return NextResponse.json(feedbacks);
+  } catch (error) {
+    console.error("Error fetching feedbacks:", error);
+    return NextResponse.json({ message: "Failed to fetch feedbacks" }, { status: 500 });
+  } finally {
+    await client.close();
+  }
 }
 
-// POST method - Save new feedback
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const { name, email, rating, feedback, type } = body;
+  try {
+    const body = await req.json();
+    const { name, email, rating, feedback, type } = body;
 
-  const newFeedback = { name, email, rating, feedback, type };
+    const newFeedback = { name, email, rating, feedback, type };
 
-  const fileData = fs.readFileSync(feedbackFilePath, "utf-8");
-  const feedbacks = JSON.parse(fileData);
+    await client.connect();
+    const db = client.db(dbName);
+    const collection = db.collection(collectionName);
+    await collection.insertOne(newFeedback);
 
-  feedbacks.push(newFeedback);
-  fs.writeFileSync(feedbackFilePath, JSON.stringify(feedbacks, null, 2));
-
-  return NextResponse.json({ message: "Feedback saved" }, { status: 201 });
+    return NextResponse.json({ message: "Feedback saved" }, { status: 201 });
+  } catch (error) {
+    console.error("Error saving feedback:", error);
+    return NextResponse.json({ message: "Failed to save feedback" }, { status: 500 });
+  } finally {
+    await client.close();
+  }
 }

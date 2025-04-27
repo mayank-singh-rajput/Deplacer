@@ -17,26 +17,41 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from "lucide-react";
+import axios from "axios";
 
 export default function ContactPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [moveType, setMoveType] = useState("");
+  const [type, setType] = useState("");
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // In a real application, you would send this data to your backend
-    console.log({ name, email, phone, moveType, message });
-    setSubmitted(true);
-    // Reset form
-    setName("");
-    setEmail("");
-    setPhone("");
-    setMoveType("");
-    setMessage("");
+    setLoading(true);
+
+    try {
+      await axios.post("/api/contact", {
+        name,
+        email,
+        phone,
+        type,
+        message,
+      });
+
+      setSubmitted(true);
+      setName("");
+      setEmail("");
+      setPhone("");
+      setType("");
+      setMessage("");
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -176,32 +191,29 @@ export default function ContactPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="moveType">Move Type</Label>
-                    <Select
-                      value={moveType}
-                      onValueChange={setMoveType}
-                      required
-                    >
-                      <SelectTrigger id="moveType">
+                    <Label htmlFor="type">Move Type</Label>
+                    <Select value={type} onValueChange={setType} required>
+                      <SelectTrigger id="type">
                         <SelectValue placeholder="Select Move Type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="residential">
+                        <SelectItem value="Residential Move">
                           Residential Move
                         </SelectItem>
-                        <SelectItem value="commercial">
+                        <SelectItem value="Commercial Move">
                           Commercial Move
                         </SelectItem>
-                        <SelectItem value="longDistance">
+                        <SelectItem value="Office Move">Office Move</SelectItem>
+                        <SelectItem value="Local Move">Local Move</SelectItem>
+                        <SelectItem value="Long Distance Move">
                           Long Distance Move
                         </SelectItem>
-                        <SelectItem value="international">
+                        <SelectItem value="International Move">
                           International Move
                         </SelectItem>
-                        <SelectItem value="storage">
+                        <SelectItem value="Storage Services">
                           Storage Services
                         </SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -223,7 +235,7 @@ export default function ContactPage() {
                     className="bg-amber-600 hover:bg-amber-700"
                   >
                     <Send className="mr-2 h-4 w-4" />
-                    Send Message
+                    {loading ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
               )}

@@ -9,6 +9,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Star, ThumbsUp } from "lucide-react";
 import axios from "axios";
 
@@ -18,7 +25,7 @@ type IFeedback = {
   rating: number;
   feedback: string;
   type: string;
-}
+};
 
 export default function FeedbackPage() {
   const [name, setName] = useState("");
@@ -28,31 +35,41 @@ export default function FeedbackPage() {
   const [feedback, setFeedback] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [feedbacks, setFeedbacks] = useState<IFeedback[]>([]);
+  const [loading, setLoading] = useState(false);
 
   // Fetch feedbacks
   useEffect(() => {
     const fetchFeedbacks = async () => {
       const response = await axios.get("/api/feedback");
-      const allFeedbacks = response.data;
-
-      // Randomly pick 3
-      const shuffled = allFeedbacks.sort(() => 0.5 - Math.random());
-      setFeedbacks(shuffled.slice(0, 3));
+      setFeedbacks(response.data);
     };
 
     fetchFeedbacks();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
-    await axios.post("/api/feedback", { name, email, rating, feedback, type });
+    try {
+      await axios.post("/api/feedback", {
+        name,
+        email,
+        rating,
+        feedback,
+        type,
+      });
 
-    setSubmitted(true);
-    setName("");
-    setEmail("");
-    setRating(0);
-    setFeedback("");
+      setSubmitted(true);
+      setName("");
+      setEmail("");
+      setRating(0);
+      setFeedback("");
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -136,14 +153,39 @@ export default function FeedbackPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="name">Reloaction Type</Label>
-                    <Input
-                      id="type"
+                    <Label htmlFor="type">Reloaction Type</Label>
+                    <Select
                       value={type}
-                      onChange={(e) => setType(e.target.value)}
-                      placeholder="Relocation Type"
+                      onValueChange={setType}
                       required
-                    />
+                    >
+                      <SelectTrigger id="type">
+                        <SelectValue placeholder="Select Reloaction Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Residential Reloaction">
+                          Residential Reloaction
+                        </SelectItem>
+                        <SelectItem value="Commercial Reloaction">
+                          Commercial Reloaction
+                        </SelectItem>
+                        <SelectItem value="Office Reloaction">
+                          Office Reloaction
+                        </SelectItem>
+                        <SelectItem value="Local Reloaction">
+                          Local Reloaction
+                        </SelectItem>
+                         <SelectItem value="Long Distance Reloaction">
+                          Long Distance Reloaction
+                        </SelectItem>
+                        <SelectItem value="International Reloaction">
+                          International Reloaction
+                        </SelectItem>
+                        <SelectItem value="Storage Services">
+                          Storage Services
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div className="space-y-2">
@@ -184,7 +226,7 @@ export default function FeedbackPage() {
                     type="submit"
                     className="bg-amber-600 hover:bg-amber-700 w-full"
                   >
-                    Submit Feedback
+                    {loading ? "Submiting..." : "Submit Feedback"}
                   </Button>
                 </form>
               )}
