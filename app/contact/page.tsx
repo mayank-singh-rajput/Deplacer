@@ -58,7 +58,7 @@ export default function ContactPage() {
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <section className="relative bg-slate-900 text-white py-16">
-        <div className="absolute inset-0 z-0 opacity-30">
+        <div className="absolute inset-0 z-0 opacity-50">
           <Image
             src="/customer-touch.png"
             alt="Customer service team"

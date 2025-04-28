@@ -76,7 +76,7 @@ export default function FeedbackPage() {
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <section className="relative bg-slate-900 text-white py-16">
-        <div className="absolute inset-0 z-0 opacity-30">
+        <div className="absolute inset-0 z-0 opacity-50">
           <Image
             src="/relocation-revolution-customer-feedback.jpg"
             alt="Customer feedback concept"
@@ -253,7 +253,7 @@ export default function FeedbackPage() {
                       <div className="flex items-center">
                         <div className="relative h-10 w-10 rounded-full overflow-hidden mr-3">
                           <Image
-                            src="/placeholder.svg?height=100&width=100&query=professional headshot"
+                            src="/user.png"
                             alt="Customer"
                             fill
                             style={{ objectFit: "cover" }}

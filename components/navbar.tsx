@@ -17,15 +17,11 @@ const Navbar = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         {/* Logo Section */}
-        <div className="relative h-16 w-16 ml-4">
+        <div className="relative h-16 w-16 ml-4 flex items-center">
           <Link href="/">
-            <Image
-              src="/Deplacer-Dp.jpg"
-              alt="Customer service team"
-              fill
-              style={{ objectFit: "cover" }}
-              className="cursor-pointer"
-            />
+            <p className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-600 tracking-tight">
+              Deplacer
+            </p>
           </Link>
         </div>
 
@@ -49,18 +45,12 @@ const Navbar = () => {
           >
             Feedback
           </Link>
-          <Link
-            href="/contact"
-            className="text-sm font-medium hover:text-amber-600 transition-colors"
-          >
-            Contact Us
-          </Link>
           <Button
             variant="default"
             className="bg-amber-600 hover:bg-amber-700"
             asChild
           >
-            <Link href="/quote">Get a Quote</Link>
+            <Link href="/contact">Contact Us</Link>
           </Button>
         </nav>
 
@@ -71,7 +61,11 @@ const Navbar = () => {
           className="md:hidden"
           onClick={toggleMenu}
         >
-          {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {isMenuOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <Menu className="h-6 w-6" />
+          )}
         </Button>
       </div>
 
@@ -100,19 +94,12 @@ const Navbar = () => {
             >
               Feedback
             </Link>
-            <Link
-              href="/contact"
-              className="px-4 py-2 text-sm font-medium hover:bg-slate-100 rounded-md"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Contact Us
-            </Link>
             <Button
               variant="default"
               className="bg-amber-600 hover:bg-amber-700 w-full"
               asChild
             >
-              <Link href="/quote">Get a Quote</Link>
+              <Link href="/contact">Contact Us</Link>
             </Button>
           </nav>
         </div>

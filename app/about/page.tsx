@@ -27,7 +27,7 @@ export default function AboutPage() {
             <div>
               <h2 className="text-3xl font-bold mb-6">Our Story</h2>
               <p className="text-slate-600 mb-4">
-              Deplacer was founded in 2010 with a simple mission: to provide reliable, efficient, and
+              Deplacer was founded in 2025 with a simple mission: to provide reliable, efficient, and
                 stress-free moving services to our customers. What started as a small local operation has grown into a
                 trusted moving company serving customers nationwide.
               </p>
